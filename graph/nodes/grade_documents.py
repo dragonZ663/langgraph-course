@@ -27,7 +27,7 @@ def grade_documents(state: GraphState) -> Dict[str, Any]:
             {"question": question, "documents": doc.page_content}
         )
 
-        if res.binary_score == "no":
+        if res.binary_score.lower() == "no":
             print("---GRADE: DOCUMENT NOT RELEVANT---")
             web_search = True
             continue
