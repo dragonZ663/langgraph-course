@@ -21,6 +21,7 @@ def retrieve(state: GraphState) -> Dict[str, Any]:
     """
     Vector Store search based on user's question.
     """
+    print("---RETRIEVE---")
     question = state["question"]
     docs = retriever.invoke(question)
 
