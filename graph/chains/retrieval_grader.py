@@ -1,13 +1,13 @@
 from dotenv import load_dotenv
 
 load_dotenv()
-import os
 from typing import Literal
 
 from langchain_core.output_parsers import PydanticOutputParser
 from langchain_core.prompts import ChatPromptTemplate
-from langchain_openai import ChatOpenAI
 from pydantic import BaseModel, Field
+
+from graph.llm import gemma4_llm
 
 
 class GradeDocuments(BaseModel):
@@ -20,12 +20,6 @@ class GradeDocuments(BaseModel):
 
 pydantic_parser = PydanticOutputParser(pydantic_object=GradeDocuments)
 format_instruction = pydantic_parser.get_format_instructions()
-llm = ChatOpenAI(
-    model="qwen/qwen3.5-9b",
-    api_key=os.environ.get("LM_STUDIO_API_KEY"),
-    base_url=os.environ.get("LM_STUDIO_BASE_URL"),
-    temperature=0,
-)
 
 system_prompt = """
     您是一名评分员，负责评估检索到的文档与用户问题的相关性。\n
@@ -41,4 +35,4 @@ prompt = ChatPromptTemplate.from_messages(
     ]
 ).partial(format_instruction=format_instruction)
 
-retrieval_grader = prompt | llm | pydantic_parser
+retrieval_grader = prompt | gemma4_llm | pydantic_parser

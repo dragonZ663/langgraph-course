@@ -6,11 +6,9 @@ import os
 
 from langchain_chroma import Chroma
 from langchain_community.document_loaders import WebBaseLoader
-from langchain_ollama import OllamaEmbeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
-# 创建Embeddings模型实例
-embedding_llm = OllamaEmbeddings(model=os.environ.get("EMBEDDING_MODEL"), temperature=0)
+from graph.llm import embedding_llm
 
 # 待加载的网页
 urls = [
@@ -25,7 +23,7 @@ doc_list = [item for subList in pages for item in subList]
 
 # 开始分块
 text_splitter = RecursiveCharacterTextSplitter.from_tiktoken_encoder(
-    chunk_size=512, chunk_overlap=0
+    chunk_size=250, chunk_overlap=0
 )
 chunks = text_splitter.split_documents(doc_list)
 
