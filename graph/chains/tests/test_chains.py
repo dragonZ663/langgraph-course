@@ -3,11 +3,12 @@ from pprint import pprint
 
 from langsmith import traceable
 
+from graph.chains.answer_grader import GradeAnswer, answer_grader
 from graph.chains.generation import generation_chain
-from graph.chains.hallucination_grader import GradeHallucinations, hallucination_grader
+from graph.chains.hallucination_grader import (GradeHallucinations,
+                                               hallucination_grader)
 from graph.chains.retrieval_grader import GradeDocuments, retrieval_grader
 from graph.nodes.retriever import retriever
-from graph.chains.answer_grader import answer_grader, GradeAnswer
 
 
 @traceable(name="test_document_grader_answer_yes")
@@ -68,6 +69,7 @@ def test_hallucination_grader_answer_no() -> None:
         }
     )
     assert not res.binary_score
+
 
 @traceable(name="test_answer_grader_answer_yes")
 def test_answer_grader_answer_yes() -> None:

@@ -1,9 +1,8 @@
+from langchain_core.output_parsers import PydanticOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 from pydantic import BaseModel, Field
 
 from graph.llm import chat_llm
-from langchain_core.output_parsers import PydanticOutputParser
-
 
 
 class GradeAnswer(BaseModel):
@@ -12,6 +11,7 @@ class GradeAnswer(BaseModel):
     binary_score: bool = Field(
         description="Whether the answer addresses the question, 'True' or 'False'"
     )
+
 
 pydantic_parser = PydanticOutputParser(pydantic_object=GradeAnswer)
 
@@ -25,8 +25,6 @@ prompt = ChatPromptTemplate.from_messages(
         ("system", system),
         ("human", "User question: {question}\n\n LLLM generation: {generation}\n\n"),
     ]
-).partial(
-    instruction = pydantic_parser.get_format_instructions()
-)
+).partial(instruction=pydantic_parser.get_format_instructions())
 
 answer_grader = prompt | chat_llm | pydantic_parser
