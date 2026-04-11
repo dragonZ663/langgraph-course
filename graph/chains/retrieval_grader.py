@@ -7,7 +7,7 @@ from langchain_core.output_parsers import PydanticOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 from pydantic import BaseModel, Field
 
-from graph.llm import gemma4_llm
+from graph.llm import chat_llm
 
 
 class GradeDocuments(BaseModel):
@@ -35,4 +35,4 @@ prompt = ChatPromptTemplate.from_messages(
     ]
 ).partial(format_instruction=format_instruction)
 
-retrieval_grader = prompt | gemma4_llm | pydantic_parser
+retrieval_grader = prompt | chat_llm | pydantic_parser

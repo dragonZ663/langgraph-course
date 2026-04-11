@@ -8,4 +8,4 @@ import os
 embedding_llm = OllamaEmbeddings(model=os.environ.get("EMBEDDING_MODEL"), temperature=0)
 
 # gemma4 对话模型
-gemma4_llm = ChatOllama(model="gemma4:e4b", temperature=0)
+chat_llm = ChatOllama(model="gemma4:e4b", temperature=0)
