@@ -8,6 +8,8 @@ from graph.chains.generation import generation_chain
 from graph.chains.hallucination_grader import (GradeHallucinations,
                                                hallucination_grader)
 from graph.chains.retrieval_grader import GradeDocuments, retrieval_grader
+from graph.chains.router import QuestionRouter, router
+from graph.consts import RETRIEVE, WEBSEARCH
 from graph.nodes.retriever import retriever
 
 
@@ -81,3 +83,21 @@ def test_answer_grader_answer_yes() -> None:
         }
     )
     assert res.binary_score
+
+
+@traceable(name="test_router_answer_retrieve")
+def test_router_answer_retrieve() -> None:
+    question = "what's is prompt engineering?"
+
+    route: QuestionRouter = router.invoke({"question": question})
+
+    assert route.next_node == RETRIEVE
+
+
+@traceable(name="test_router_answer_websearch")
+def test_router_answer_websearch() -> None:
+    question = "What's the weather in Nanjing today?"
+
+    route: QuestionRouter = router.invoke({"question": question})
+
+    assert route.next_node == WEBSEARCH

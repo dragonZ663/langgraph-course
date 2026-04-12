@@ -1,8 +1,8 @@
+from langchain_core.output_parsers import PydanticOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 from pydantic import BaseModel, Field
 
 from graph.llm import chat_llm
-from langchain_core.output_parsers import PydanticOutputParser
 
 
 class GradeHallucinations(BaseModel):
@@ -11,6 +11,7 @@ class GradeHallucinations(BaseModel):
     binary_score: bool = Field(
         description="Answer is grounded in the facts, 'True' or 'False'"
     )
+
 
 pydantic_parser = PydanticOutputParser(pydantic_object=GradeHallucinations)
 

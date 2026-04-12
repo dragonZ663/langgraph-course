@@ -17,7 +17,7 @@ def web_search(state: GraphState) -> Dict[str, Any]:
     """
     print("---WEB SEARCH---")
     question = state["question"]
-    documents = state["documents"]
+    documents = state.get("documents", None)
     is_web_search = state.get("web_search", False)
 
     res = tavily_search.invoke({"query": question})
