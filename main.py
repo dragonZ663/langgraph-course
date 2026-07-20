@@ -1,16 +1,20 @@
 from dotenv import load_dotenv
+
 load_dotenv()
 
 from langgraph.graph import MessagesState, StateGraph, END
 from langchain_core.messages import HumanMessage
 from nodes import run_agent_reasoning, tool_node
+from langfuse.langchain import CallbackHandler
+
+langfuse_handler = CallbackHandler()
 
 AGENT_REASON = "agent_reason"
 ACT = "act"
 LAST = -1
 
 def should_continue(state: MessagesState) -> str:
-    if not state["messages"][LAST].tool_calls:
+    if not getattr(state["messages"][LAST], "tool_calls", None):
         return END
     return ACT
 
@@ -29,11 +33,18 @@ flow.add_conditional_edges(AGENT_REASON, should_continue, {
 flow.add_edge(ACT, AGENT_REASON)
 
 app = flow.compile()
-app.get_graph().draw_mermaid_png(output_file_path="flow.png")
+# app.get_graph().draw_mermaid_png(output_file_path="flow.png")
 
 def main():
     print("Hello ReAct LangGraph with Function Calling")
-    res = app.invoke({"messages": [HumanMessage(content="What's the temperature in NanJing JiangSu China? List it and then triple it")]})
+    res = app.invoke(
+        {
+            "messages": [
+                HumanMessage(content="What's the temperature in NanJing JiangSu China? List it and then triple it")
+            ]
+        },
+        config={"callbacks": [langfuse_handler]}
+        )
     print(res["messages"][LAST].content)
 
 

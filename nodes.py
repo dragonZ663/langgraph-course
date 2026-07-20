@@ -20,7 +20,7 @@ def run_agent_reasoning(state: MessagesState) -> MessagesState:
         [{"role": "system", "content": SYSTEM_MESSAGE}, *state["messages"]]
     )
 
-    return {"messages": response}
+    return {"messages": [response]}
 
 
 tool_node = ToolNode(tools)
